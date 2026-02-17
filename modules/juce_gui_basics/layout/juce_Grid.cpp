@@ -182,11 +182,9 @@ struct Grid::Helpers
                         const auto absoluteSize = currentItem.getAbsoluteSize (relativeUnit);
 
                         if (! currentItem.isFractional())
-                            return roundingFunction (absoluteSize);
+                            return absoluteSize;
 
-                        const auto result = roundingFunction (absoluteSize - carriedError);
-                        carriedError += result - absoluteSize;
-                        return result;
+                        return absoluteSize;
                     }();
 
                     if (currentItem.isFractional())
@@ -525,13 +523,12 @@ struct Grid::Helpers
             jassert (isPositiveAndBelow (correctedColumn, tracks.columns.items.size()));
             jassert (isPositiveAndBelow (correctedRow,    tracks.rows   .items.size()));
 
-            return
-            {
-                calculation.columnTrackBounds[(size_t) correctedColumn].getStart(),
-                calculation.rowTrackBounds[(size_t) correctedRow].getStart(),
-                calculation.columnTrackBounds[(size_t) correctedColumn].getEnd() - calculation.columnTrackBounds[(size_t) correctedColumn].getStart(),
-                calculation.rowTrackBounds[(size_t) correctedRow].getEnd() - calculation.rowTrackBounds[(size_t) correctedRow].getStart()
-            };
+            auto x = roundingFunction(calculation.columnTrackBounds[col].getStart());
+            auto y = roundingFunction(calculation.rowTrackBounds[row].getStart());
+            auto w = roundingFunction(calculation.columnTrackBounds[col].getEnd() - calculation.columnTrackBounds[col].getStart());
+            auto h = roundingFunction(calculation.rowTrackBounds[row].getEnd() - calculation.rowTrackBounds[row].getStart());
+
+            return { x, y, w, h };
         }
 
         template <typename RoundingFunction>
