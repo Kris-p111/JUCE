@@ -192,7 +192,7 @@ struct Grid::Helpers
 
                     const auto end = start + currentTrackSize;
                     outBounds.emplace_back (start, end);
-                    start = end + roundingFunction (static_cast<float> (gap.pixels));
+                    start = end + static_cast<float> (gap.pixels);
                 }
             };
 
